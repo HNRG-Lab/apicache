@@ -248,7 +248,7 @@ function ApiCache() {
 
     var headers = getSafeHeaders(response)
 
-    Object.assign(headers, filterBlacklistedHeaders(cacheObject.headers || {}), {
+    Object.assign(headers, {
       // set properly-decremented max-age header.  This ensures that max-age is in sync with the cache expiration.
       'cache-control':
         'max-age=' +
@@ -256,7 +256,7 @@ function ApiCache() {
           0,
           (duration / 1000 - (new Date().getTime() / 1000 - cacheObject.timestamp)).toFixed(0)
         ),
-    })
+    }, filterBlacklistedHeaders(cacheObject.headers || {}))
 
     // only embed apicache headers when not in production environment
     if (process.env.NODE_ENV !== 'production') {
